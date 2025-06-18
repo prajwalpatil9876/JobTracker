@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    environment {
+        PATH = "$HOME/.local/bin:$PATH"
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -7,16 +12,21 @@ pipeline {
                 sh 'pip install --user --break-system-packages -r requirements.txt'
             }
         }
+
         stage('Test') {
             steps {
                 echo 'Running tests...'
                 sh 'pytest'
             }
         }
+
         stage('Deliver') {
+            when {
+                expression { currentBuild.currentResult == 'SUCCESS' }
+            }
             steps {
-                echo 'Delivery step (e.g. Dockerize, SCP, etc.)'
-                sh 'echo done'
+                echo 'Delivering...'
+                sh 'echo Deployment step here.'
             }
         }
     }
