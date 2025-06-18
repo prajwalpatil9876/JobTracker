@@ -14,11 +14,15 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                echo 'Running tests...'
-                sh 'pytest'
-            }
-        }
+    steps {
+        echo 'Running tests...'
+        sh '''
+            export PYTHONPATH=$PYTHONPATH:$(pwd)
+            pytest
+        '''
+    }
+}
+
 
         stage('Deliver') {
             when {
